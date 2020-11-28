@@ -1,0 +1,6 @@
+{
+    "env": {
+        "MONGO_ATLAS_PW": "Da0oAcjNm0to8NnG",
+        "JWT_KEY":"the best is yet to come"
+    }
+}
