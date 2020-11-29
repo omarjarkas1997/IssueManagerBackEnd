@@ -1,21 +1,15 @@
 const express = require('express');
+const Issue = require('../models/issues');
 const router = express.Router();
-const records = require('../records/records');
-const registerFunction = require('../helper/registerFunctions');
-const authController = require('../controllers/authControllers');
-const jwtFunction = require('../controllers/jwtControllers');
-const usersFunctions = require('../controllers/usersController');
-/** Get all Users */
-router.get('/users', usersFunctions.getAllUsers);
+const AuthRoutes = require('./authRoutes/authRoutes');
+const IssuesRoutes = require('./issuesRoutes/issuesRoutes');
 
-/** Create new User */
-router.post('/register', authController.createNewUser);
 
-/** User Login */
-router.post('/login', authController.login);
+/** Auth and Users Routes */
+router.use('/', AuthRoutes);
 
-/** Get one user */
-router.post('/user', usersFunctions.getOneUser);
+/** Issues Routes */
+router.use('/issues', IssuesRoutes)
 
 
 

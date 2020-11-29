@@ -1,7 +1,8 @@
 const User = require('../models/User');
 const jwtFunctions = require('./jwtControllers');
 
-module.exports.createNewUser = async (req, res, next)=>{
+/** Create a New User Account */
+createNewUser = async (req, res, next)=>{
     try {
         
         const { email, password, firstName, lastName } = req.body;
@@ -49,7 +50,8 @@ module.exports.createNewUser = async (req, res, next)=>{
     }
 }
 
-module.exports.login = async (req, res, next)=>{
+/** Authentication user email on database */
+login = async (req, res, next)=>{
     try {
         const { email, password } = req.body;
         if(email && password) {
@@ -91,7 +93,8 @@ module.exports.login = async (req, res, next)=>{
     }
 }
 
-module.exports.getAllUsers = async (req,res,next) => {
+/** Get: all Users   */
+getAllUsers = async (req,res,next) => {
     try {
         
         User.find({}, (err, users) => {
@@ -108,6 +111,12 @@ module.exports.getAllUsers = async (req,res,next) => {
     } catch (error) {
         next(error);
     }
+}
+
+module.exports = {
+    createNewUser,
+    login,
+    getAllUsers
 }
 
 

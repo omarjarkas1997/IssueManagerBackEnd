@@ -1,6 +1,6 @@
 const User = require('../models/User');
 
-module.exports.getAllUsers = async (req,res,next) => {
+getAllUsers = async (req,res,next) => {
     try {
         User.find({}, (err, users) => {
             if(err) {
@@ -28,7 +28,7 @@ module.exports.getAllUsers = async (req,res,next) => {
     }
 }
 
-module.exports.getOneUser = async (req,res, next) => {
+getOneUser = async (req,res, next) => {
     try {
         const {email, id } = req.body;
         if(email) {
@@ -58,4 +58,9 @@ module.exports.getOneUser = async (req,res, next) => {
     } catch (error) {
         next(error);
     }
+}
+
+module.exports = {
+    getAllUsers,
+    getOneUser
 }

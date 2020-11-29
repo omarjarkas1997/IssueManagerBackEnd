@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 
 /** Creating a token for a user and signing it using secret key */
-module.exports.tokenParameters = (id, firstName, lastName) => {
+tokenParameters = (id, firstName, lastName) => {
     const token = jwt.sign({
         id: id,
         firstName: firstName,
@@ -13,7 +13,7 @@ module.exports.tokenParameters = (id, firstName, lastName) => {
 }
 
 /** Parser request header to check if tokens are available */
-module.exports.verifyToken = (req, res, next) => {
+verifyToken = (req, res, next) => {
     const bearerHeader = req.headers['authorization'];
     console.log("bearerHeader"+bearerHeader);
     if(typeof bearerHeader !== 'undefined') {
@@ -33,4 +33,22 @@ module.exports.verifyToken = (req, res, next) => {
         error.status = 403;
         next(error);
     }
+}
+
+parseJwt = (token, next) => {
+    try {
+        var base64Payload = token.split('.')[1];
+        var payload = Buffer.from(base64Payload, 'base64');
+        return JSON.parse(payload.toString());  
+    } catch (error) {
+        error = new Error("JWT not Found!");
+        error.status = 401;
+        next(error);
+    }
+  }
+
+module.exports = {
+    parseJwt,
+    verifyToken,
+    tokenParameters
 }
