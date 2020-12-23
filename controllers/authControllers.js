@@ -28,13 +28,16 @@ createNewUser = async (req, res, next)=>{
                     } 
                     next(err);
                 } else {
-                    const token = jwtFunctions.tokenParameters(user._id, user.firstName, user.lastName);
-                    return res.json({
+                    const token = jwtFunctions.generateJwtToken(user._id, user.firstName, user.lastName);
+                    const returnedUser = {
                         id: user._id,
                         firstName: user.firstName,
                         lastName: user.lastName,
+                        profileImage: user.profileImage,
                         token: token
-                    });
+                    };
+                    res.cookie('currentUser', JSON.stringify(returnedUser), { maxAge: 1000 * 60 * 20 });
+                    return res.json(returnedUser);
                 }
             });
         } else {
@@ -61,14 +64,18 @@ login = async (req, res, next)=>{
                     next(err);
                 } else if (user) {
                     if(user.password === password){
-                        const token = jwtFunctions.tokenParameters(user._id, user.firstName, user.lastName);
+                        const token = jwtFunctions.generateJwtToken(user._id, user.firstName, user.lastName);
                         console.log(user);
-                        res.json({
+                        const returnedUser = {
                             id: user._id,
                             firstName: user.firstName,
                             lastName: user.lastName,
+                            profileImage: user.profileImage,
                             token: token
-                        });
+                        };
+                        // 24 * 60 * 60 * 1000 --- 24 hours
+                        res.cookie("currentUser", JSON.stringify(returnedUser), { maxAge: 1000 * 60 * 20 });
+                        res.json(returnedUser);
                     } else {
                         var Err = new Error('Password incorrect');
                         Err.status = 401;
@@ -93,7 +100,7 @@ login = async (req, res, next)=>{
     }
 }
 
-/** Get: all Users   */
+/** Get: All Users   */
 getAllUsers = async (req,res,next) => {
     try {
         
@@ -112,6 +119,8 @@ getAllUsers = async (req,res,next) => {
         next(error);
     }
 }
+
+
 
 module.exports = {
     createNewUser,

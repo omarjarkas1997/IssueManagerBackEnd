@@ -12,8 +12,8 @@ const corsHandler = require('./helper/cors');
 var mongoose = require('mongoose');
 /** Error Handling Functions */
 var errorControllers = require('./controllers/errorControllers');
-/** Dot Env */
-var dotenv = require('dotenv').config();
+/** Cookies */
+var cookieParser = require('cookie-parser');
 
 /** Middlewares */
 /** Logger */
@@ -24,9 +24,12 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 /** Cross Origin Resourse Sharing */
 app.use(corsHandler.corsHandler);
 /** Routes */
-app.use('/',jsonParser, routes);
+app.use('/', jsonParser, routes);
+/** Route to view photos */
+app.use('/profile-images', express.static('profile-images'));
+/** Cookies Parser */
+app.use(cookieParser());
 
-process.env.JWT_KEY
 /** Connect to MongoDB */
 const dbURI = "mongodb+srv://omarjarkas:Da0oAcjNm0to8NnG@cluster0.cjgkn.mongodb.net/Cluster0";
 mongoose.connect(dbURI,{ useNewUrlParser: true, useUnifiedTopology: true });

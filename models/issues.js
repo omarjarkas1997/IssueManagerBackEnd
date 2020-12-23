@@ -9,6 +9,14 @@ var IssueSchema = new Schema({
         id: {
             type: String,
             required: true,
+        },
+        name: {
+            type: String,
+            required: true,
+        },
+        profileImage: {
+          type: String,
+          default: 'profile-images/default-profile-picture.jpeg'
         }
     },
     issueName:{

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 
 /** Creating a token for a user and signing it using secret key */
-tokenParameters = (id, firstName, lastName) => {
+generateJwtToken = (id, firstName, lastName) => {
     const token = jwt.sign({
         id: id,
         firstName: firstName,
@@ -15,7 +15,6 @@ tokenParameters = (id, firstName, lastName) => {
 /** Parser request header to check if tokens are available */
 verifyToken = (req, res, next) => {
     const bearerHeader = req.headers['authorization'];
-    console.log("bearerHeader"+bearerHeader);
     if(typeof bearerHeader !== 'undefined') {
         const bearer = bearerHeader.split(' ');
         const bearerToken = bearer[1];
@@ -50,5 +49,5 @@ parseJwt = (token, next) => {
 module.exports = {
     parseJwt,
     verifyToken,
-    tokenParameters
+    generateJwtToken
 }
