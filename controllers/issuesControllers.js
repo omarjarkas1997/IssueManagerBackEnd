@@ -315,6 +315,33 @@ getIssueByName = async (req, res, next) => {
     }
 }
 
+/** GET: issue by issue Id */
+
+getIssueByIssueId = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        /** Search name against issueName, impact, severity, description and return 
+         * a list of all matched 
+         */
+        if (id) {
+            Issue.findById(id, (err, issues) => {
+                if (err) {
+                    next(err);
+                }
+                if (issues) {
+                    res.json(issues);
+                }
+            });
+        } else {
+            var error = new Error('ID is the request param missing!');
+            error.status = 404;
+            next(error);
+        }
+    } catch (error) {
+        next(error);
+    }
+}
+
 
 module.exports = {
     createNewIssue,
@@ -323,5 +350,6 @@ module.exports = {
     updateIssueSeverity,
     getIssueLoggedByUser,
     getIssuesFollowedByUser,
-    getIssueByName
+    getIssueByName,
+    getIssueByIssueId
 }

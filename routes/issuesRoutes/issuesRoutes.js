@@ -23,6 +23,9 @@ router.put('/update-severity', issuesControllers.updateIssueSeverity);
 /** Get Issue by name */
 router.get('/issue-name', issuesControllers.getIssueByName);
 
+/** Get Issue by name */
+router.get('/issue/:id', issuesControllers.getIssueByIssueId);
+
 
 
 

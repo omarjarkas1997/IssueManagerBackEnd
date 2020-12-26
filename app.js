@@ -14,6 +14,8 @@ var mongoose = require('mongoose');
 var errorControllers = require('./controllers/errorControllers');
 /** Cookies */
 var cookieParser = require('cookie-parser');
+/**TESTING */
+const UserMessage = require('./models/UserMessages');
 
 /** Middlewares */
 /** Logger */
@@ -37,6 +39,7 @@ mongoose.set('useCreateIndex', true);
 var db = mongoose.connection; // Reffernce db
 /** Logging Error Event */
 db.on('error', console.error.bind(console,'connection error:'));
+
 
 
 /** Catching 404 Errors */
