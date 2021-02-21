@@ -36,7 +36,8 @@ createNewUser = async (req, res, next)=>{
                         profileImage: user.profileImage,
                         token: token
                     };
-                    res.cookie('currentUser', JSON.stringify(returnedUser), { maxAge: 1000 * 60 * 20 });
+                    console.log(returnedUser);
+                    res.cookie("currentUser", JSON.stringify(returnedUser), { maxAge: 1000 * 60 * 20 });
                     return res.json(returnedUser);
                 }
             });

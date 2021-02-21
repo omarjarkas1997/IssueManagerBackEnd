@@ -1,22 +1,20 @@
+const Conversation = require('../models/UserMessages');
 const UserMessage = require('../models/UserMessages');
+const convoFunctions = require('../helper/convoFunctions');
+
+// UserMessage.watch().on('change', data => {
+//     console.log("The change is ");
+//     console.log(data);
+// });
 
 
-UserMessage.watch().on('change', data => {
-    console.log("The change is ");
-    console.log(data);
-});
-
-/** GET: All messages of a single users */
-getAllSentMessages = (req, res, next) => {
+/** Create a new conversation between two parties */
+newConversation = (req, res, next) => {
     try {
-        const senderID = req.params.senderID;
-        if (senderID) {
-            UserMessage.find({ senderID: senderID }, (err, messages) => {
-                if (err) {
-                    return next(error);
-                }
-                return res.json(messages);
-            }).sort({ createdAt: -1 });
+        const { recipientID } = req.params;
+        const { authorID, body } = req.body;
+        if (authorID && recipientID && body) {
+            convoFunctions.createConvoOrAddMessageREST(authorID, recipientID, body, res, next);
         } else {
             var error = new Error('Required feilds are missing!');
             error.status = 422; /** Unprocessable entity */
@@ -27,67 +25,78 @@ getAllSentMessages = (req, res, next) => {
     }
 }
 
-/** GET: All messages of a single users */
-getAllRecievedMessages = (req, res, next) => {
+/** GET: all conversation in the DB */
+getAllConversations = (req, res, next) => {
     try {
-        const recipientID = req.params.recipientID;
-        if (recipientID) {
-            UserMessage.find({ recipientID: recipientID }, (err, messages) => {
-                if (err) {
-                    return next(error);
-                }
-                return res.json(messages);
-            }).sort({ createdAt: -1 });
-        } else {
-            var error = new Error('Required feilds are missing!');
-            error.status = 422; /** Unprocessable entity */
-            next(error);
-        }
+        UserMessage.find({}, (err, convo) => {
+            res.json(convo);
+        });
     } catch (error) {
         next(error);
     }
 }
 
-/** GET: All messages between two people */
-getTwoPartiesConversation = (req, res, next) => {
-    try {
-        const recipientID = req.params.recipientID;
-        const senderID = req.params.senderID;
-        if (recipientID && senderID) {
-            UserMessage.find({ recipientID: recipientID, senderID: senderID }, (err, messages) => {
-                if (err) {
-                    return next(error);
-                }
-                return res.json(messages);
-            }).sort({ createdAt: -1 });
-        } else {
-            var error = new Error('Required feilds are missing!');
-            error.status = 422; /** Unprocessable entity */
-            next(error);
-        }
-    } catch (error) {
-        next(error);
-    }
-}
 
-/** POST: Create a new message with a sender and a recipient */
-createANewMessage = (req, res, next) => {
+/** GET: all conversation in the DB */
+getAllUserConversations = (req, res, next) => {
     try {
-        const senderID = req.params.senderID;
-        const recipientID = req.body.recipientID;
-        const message = req.body.message;
-        if (senderID && recipientID && message) {
-            const newMessage = {
-                recipientID: recipientID,
-                senderID: senderID,
-                message: message
-            };
-            UserMessage.create(newMessage, (err, messages) => {
-                if (err) {
-                    return next(error);
-                }
-                return res.json(messages);
+        const { userID } = req.params;
+        if (userID) {
+            UserMessage.find({ members: userID }, (err, convo) => {
+                res.json(convo);
             });
+
+        } else {
+            var error = new Error('Required feilds are missing!');
+            error.status = 422; /** Unprocessable entity */
+            next(error);
+        }
+    } catch (error) {
+        next(error);
+    }
+}
+
+/** GET: all conversation in the DB */
+getConversation = (req, res, next) => {
+    try {
+        const { recipientID, senderID } = req.params;
+        if (recipientID && senderID) {
+            const newConvo = {
+                members: [senderID, recipientID],
+                messages: []
+            };
+            UserMessage.findOne({ members: { $all: [recipientID, senderID] } }, (err, convo) => {
+                if (err) {
+                    return next(err);
+                }
+                if (convo) {
+                    res.json(convo);
+                } else {
+                    res.json(newConvo);
+                }
+            });
+
+        } else {
+            var error = new Error('Required feilds are missing!');
+            error.status = 422; /** Unprocessable entity */
+            next(error);
+        }
+    } catch (error) {
+        next(error);
+    }
+}
+
+/** 
+ * This is when open a new contact and you want to create and return an conversation
+ * with no body in it
+ */
+getConversationOrCreateAnEmptyConversation = (req, res, next) => {
+    try {
+        const { recipientID } = req.params;
+        const { authorID } = req.body;
+        console.log(req.body);
+        if (authorID && recipientID) {
+            convoFunctions.createOrGetConvo(authorID, recipientID, res, next);
         } else {
             var error = new Error('Required feilds are missing!');
             error.status = 422; /** Unprocessable entity */
@@ -99,8 +108,9 @@ createANewMessage = (req, res, next) => {
 }
 
 module.exports = {
-    createANewMessage,
-    getAllSentMessages,
-    getAllRecievedMessages,
-    getTwoPartiesConversation
+    newConversation,
+    getAllConversations,
+    getAllUserConversations,
+    getConversation,
+    getConversationOrCreateAnEmptyConversation
 }

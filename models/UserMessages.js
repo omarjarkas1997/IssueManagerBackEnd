@@ -1,30 +1,71 @@
 const mongoose = require('mongoose');
 
-
-const UserMessageSchema = new mongoose.Schema({
-    recipientID: {
+const MessageSchema = new mongoose.Schema({
+    authorID: {
         type: String,
         required: true,
         trim: true,
     },
-    senderID: {
+    body: {
         type: String,
         required: true,
         trim: true,
-    },
-    message: {
-        type: String,
-        required: true,
-        trim: true
     },
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
 });
 
 
-var UserMessage = mongoose.model('UserMessage', UserMessageSchema);
+const ConversationSchema = new mongoose.Schema({
+    members: {
+        type: [String],
+        required: true,
+        trim: true,
+    },
+    messages: [MessageSchema]
+});
 
 
-module.exports = UserMessage;
+
+
+
+
+var Conversation = mongoose.model('Conversation', ConversationSchema);
+
+
+module.exports = Conversation;
+
+
+
+// const mongoose = require('mongoose');
+
+
+// const UserMessageSchema = new mongoose.Schema({
+//     recipientID: {
+//         type: String,
+//         required: true,
+//         trim: true,
+//     },
+//     senderID: {
+//         type: String,
+//         required: true,
+//         trim: true,
+//     },
+//     message: {
+//         type: String,
+//         required: true,
+//         trim: true
+//     },
+//     createdAt: {
+//         type: Date,
+//         default: Date.now
+//     }
+// });
+
+
+// var UserMessage = mongoose.model('UserMessage', UserMessageSchema);
+
+
+// module.exports = UserMessage;

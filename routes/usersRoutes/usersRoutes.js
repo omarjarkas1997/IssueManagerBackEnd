@@ -13,9 +13,10 @@ router.post('/user', usersFunctions.getOneUser);
 /** POST: upload new profile image */
 router.post('/user/profile-image/:id', profileImageFunctions.upload.single('profileImage'), usersFunctions.updateProfileImage);
 
-
 /** Get one user using body */
 router.get('/user/:id', usersFunctions.getOneUser);
 
+/** Update User First Name */
+router.put('/user/update-name', usersFunctions.updateUserName);
 
 module.exports = router;

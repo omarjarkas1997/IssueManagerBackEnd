@@ -122,8 +122,39 @@ updateProfileImage = async (req, res, next) => {
     }
 }
 
+updateUserName = async (req, res, next) => {
+    try {
+        const { id, firstName, lastName } = req.body;
+        console.log(req.body);
+        if (id && firstName && lastName) {
+            User.findById(id, (err, user) => {
+                if (err) {
+                    next(err);
+                }
+                if (user) {
+                    user.firstName = firstName;
+                    user.lastName = lastName;
+                    user.save();
+                    res.json(user);
+                } else {
+                    var error = new Error('Issue not found in the db!');
+                    error.status = 404;
+                    next(error);
+                }
+            });
+        } else {
+            var error = new Error('Feild missing in the request body!');
+            error.status = 404;
+            next(error);
+        }
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     getAllUsers,
     getOneUser,
-    updateProfileImage
+    updateProfileImage,
+    updateUserName,
 }

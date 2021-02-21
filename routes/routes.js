@@ -4,6 +4,8 @@ const AuthRoutes = require('./authRoutes/authRoutes');
 const IssuesRoutes = require('./issuesRoutes/issuesRoutes');
 const UsersRoutes = require('./usersRoutes/usersRoutes');
 const MessagesRoutes = require('./messagesRoutes/messagesRoutes');
+const TodoRouters = require('./todoRoutes/todoRoutes');
+
 /** Auth and Users Routes */
 router.use('/', AuthRoutes);
 
@@ -15,6 +17,10 @@ router.use('/issues', IssuesRoutes);
 
 
 /** Issues Routes */
-router.use('/messages', MessagesRoutes);
+router.use('/conversation', MessagesRoutes);
+
+
+/** Issues Routes */
+router.use('/todo', TodoRouters);
 
 module.exports = router;
