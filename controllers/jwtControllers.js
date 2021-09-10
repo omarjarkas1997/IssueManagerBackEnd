@@ -34,6 +34,38 @@ verifyToken = (req, res, next) => {
     }
 }
 
+/** Parser request header to check if tokens are available */
+verifyTokenAdmin = (req, res, next) => {
+    const bearerHeader = req.headers['authorization'];
+    if(typeof bearerHeader !== 'undefined') {
+        const bearer = bearerHeader.split(' ');
+        const bearerToken = bearer[1];
+        try {
+            const token = jwt.verify(bearerToken, 'adminsecretkey');
+            req.token = token;
+            next();
+        } catch (error) {
+            error.message = 'Forbidden';
+            error.status = 403;
+            next(error);
+        }
+    } else {
+        var error = new Error('Forbidden');
+        error.status = 403;
+        next(error);
+    }
+}
+
+/** Creating a token for a user and signing it using secret key */
+generateJwtTokenAdmin = (id, firstName, lastName) => {
+    const token = jwt.sign({
+        id: id,
+        firstName: firstName,
+        lastName: lastName
+    }, 'secretkey', { expiresIn: '30m'});
+    return token;
+}
+
 parseJwt = (token, next) => {
     try {
         var base64Payload = token.split('.')[1];
@@ -49,5 +81,7 @@ parseJwt = (token, next) => {
 module.exports = {
     parseJwt,
     verifyToken,
-    generateJwtToken
+    generateJwtToken,
+    verifyTokenAdmin,
+    generateJwtTokenAdmin
 }

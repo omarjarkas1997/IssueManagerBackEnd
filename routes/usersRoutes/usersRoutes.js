@@ -4,7 +4,7 @@ const profileImageFunctions = require('../../helper/imageUploadFunctions');
 
 
 /** Get all Users */
-router.get('/', usersFunctions.getAllUsers);
+router.get('/all', usersFunctions.getAllUsers);
 
 /** Get one user using body */
 router.post('/user', usersFunctions.getOneUser);

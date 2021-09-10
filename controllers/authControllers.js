@@ -104,7 +104,7 @@ login = async (req, res, next)=>{
 /** Get: All Users   */
 getAllUsers = async (req,res,next) => {
     try {
-        
+        console.log("test");
         User.find({}, (err, users) => {
             if(err) {
                 return next(err);
