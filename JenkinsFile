@@ -18,6 +18,7 @@ pipeline {
         stage("deploy") {
             steps {
                 echo "Deloying the application"
+                echo "Deloying the application"
             }
         }
     }
